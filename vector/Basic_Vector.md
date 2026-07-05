@@ -1,0 +1,62 @@
+# Vectors — AI Cheat Sheet
+
+## 1. Vector
+A list of numbers = a point in space. In AI, that point represents **meaning**.
+```
+"cat" → [0.2, -0.7, 0.9]
+"dog" → [0.3, -0.6, 0.8]   ← close to "cat" = similar meaning
+```
+n-dimensional just means more numbers: `[x1, x2, ..., xn]`. Real embeddings use 384–1536 dims.
+
+## 2. Vector Addition
+Add position by position. Same use as combining meanings/features.
+```
+[2,3] + [4,1] = [6,4]
+```
+
+## 3. Scalar Multiplication
+Multiply every value by a number. Scales the vector, keeps direction (if scalar > 0).
+```
+4 × [2,3] = [8,12]
+```
+
+## 4. Dot Product
+`a·b = a1*b1 + a2*b2 + ...` → one number = **how aligned two vectors are**.
+```
+[2,3]·[4,1] = 8+3 = 11
+```
+- big positive → same direction (similar)
+- 0 → unrelated
+- negative → opposite meaning
+
+## 5. Magnitude (Norm)
+Length of a vector: `||v|| = sqrt(sum of squares)`
+```
+[3,4] → sqrt(9+16) = 5
+```
+
+## 6. Cosine Similarity — **the core of semantic search**
+`cos_sim = (a·b) / (||a|| × ||b||)` → dot product, but normalized for length. Only cares about **direction = meaning**, not sentence length.
+```
+a=[2,3], b=[4,1] → dot=11, ||a||=√13, ||b||=√17
+cos_sim = 11 / √221 ≈ 0.74  → fairly similar
+```
+Range: `1` = same meaning · `0` = unrelated · `-1` = opposite
+
+**AI use case:** query "best laptops for students" vs doc "affordable student laptops" → both become vectors → cosine similarity ranks which doc is closest in meaning. This is what every RAG/vector DB does under the hood.
+
+## 7. Cosine vs Euclidean vs Dot Product
+| Metric | Cares about | AI notes |
+|---|---|---|
+| Cosine similarity | direction only | default for text — ignores sentence length |
+| Euclidean distance | direction + magnitude | same meaning ≠ same distance if lengths differ |
+| Dot product | direction + magnitude (unnormalized) | cheapest to compute |
+
+**Interview trivia:** if embeddings are normalized (`\|v\|=1`), cosine similarity = dot product. That's why vector DBs often just use dot product on normalized embeddings — faster, same result.
+
+## 8. Matrices — just enough
+A matrix = a stack of vectors. `matrix × vector` = transforming a point.
+This is literally one neural network layer: `input vector × weight matrix = output vector`. No need to multiply by hand for agent work.
+
+## 9. High-Dimensional Intuition
+"Close vectors = close meaning" still holds at 768D/1536D, same formulas. Catch: in high dimensions everything drifts toward equidistant (**curse of dimensionality**) — which is why embedding models are trained (contrastive learning) to keep truly-similar things actually close, instead of relying on geometry alone.
