@@ -44,7 +44,8 @@ def fake_llm(messages, tools):
         # pretend the model wants to call the calculator tool
         return {
             "tool_calls": [
-                {"name": "calculator", "arguments": {"operation": "add", "a": 2, "b": 3}}
+                {"name": "calculator", "arguments": {"operation": "add", "a": 2, "b": 3}},
+                {"name": "calculator", "arguments": {"operation": "multiply", "a": 10, "b": 4}},
             ],
             "text": None,
         }
@@ -66,6 +67,7 @@ while True:
             result = execute(call)
             messages.append({"role": "tool", "content": str(result)})
     else:
+        print(messages) 
         print(response["text"])
         break
 
